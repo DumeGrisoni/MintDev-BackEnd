@@ -1,14 +1,42 @@
 <?php
 
-namespace App\Tests;
+
+namespace App\Tests\Unit;
 
 use App\Entity\Article;
 use DateTime;
-use Doctrine\DBAL\Types\StringType;
 use PHPUnit\Framework\TestCase;
 
 class ArticleUnitTest extends TestCase
 {
+
+    /**
+     * Test de l'entité Article, doit retourner qu'il fait partie de la classe Article
+     *
+     * @return void
+     */
+    public function testIsInstanceOf() : void
+    {
+        $article = new Article();
+        $value = 'title';
+        $date = new DateTime('now');
+        $resTitle = $article->setTitle($value);
+        $resContent = $article->setContent($value);
+        $resExcerpt = $article->setExcerpt($value);
+        $resImage = $article->setImage($value);
+        $resSlug = $article->setSlug($value);
+        $resCreation = $article->setCreatedAt($date);
+        $resUpdate = $article->setUpdatedAt($date);
+
+        self::assertInstanceOf(Article::class, $resTitle);
+        self::assertInstanceOf(Article::class, $resContent);
+        self::assertInstanceOf(Article::class, $resExcerpt);
+        self::assertInstanceOf(Article::class, $resSlug);
+        self::assertInstanceOf(Article::class, $resImage);
+        self::assertInstanceOf(Article::class, $resCreation);
+        self::assertInstanceOf(Article::class, $resUpdate);
+
+    }
 
     /**
      * Test de l'entité Article, doit retourner vrai
@@ -125,4 +153,5 @@ class ArticleUnitTest extends TestCase
 
         $this->assertContainsOnly('DateTime', [$article->getCreatedAt(), $article->getUpdatedAt()]);
     }
+
 }

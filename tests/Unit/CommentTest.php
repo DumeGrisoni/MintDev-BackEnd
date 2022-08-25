@@ -1,13 +1,32 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Unit;
 
-use App\Entity\Category;
+use App\Entity\Comment;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class CategoryTest extends TestCase
+class CommentTest extends TestCase
 {
+    /**
+     * Test de l'entité Comment doit retourner qu'il fait partie de la classe Comment
+     *
+     * @return void
+     */
+    public function testIsInstanceOf(): void
+    {
+        $entity = new Comment();
+        $date = new DateTime("now");
+        $value = "name";
+
+        $resContent = $entity->setContent($value);
+        $restCreation = $entity->setCreatedAt($date);
+        $restUpdate = $entity->setUpdatedAt($date);
+
+        self::assertInstanceOf(Comment::class, $resContent);
+        self::assertInstanceOf(Comment::class, $restCreation);
+        self::assertInstanceOf(Comment::class, $restUpdate);
+    }
 
     /**
      * Test de l'entité Category, doit retourner true
@@ -16,21 +35,16 @@ class CategoryTest extends TestCase
      */
     public function testIsTrue(): void
     {
-        $entity = new Category();
+        $entity = new Comment();
         $now = new DateTime("now");
 
-        $entity->setName('name');
-        $entity->setSlug('slug');
-        $entity->setColor('color');
+        $entity->setContent('content');
         $entity->setCreatedAt($now);
         $entity->setUpdatedAt($now);
 
-        $this->assertTrue($entity->getName() === 'name');
-        $this->assertTrue($entity->getColor() === 'color');
-        $this->assertTrue($entity->getSlug() === 'slug');
+        $this->assertTrue($entity->getContent() === 'content');
         $this->assertTrue($entity->getCreatedAt() === $now);
         $this->assertTrue($entity->getUpdatedAt() === $now);
-
     }
 
     /**
@@ -38,23 +52,19 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testIsFalse() : void
+    public function testIsFalse(): void
     {
 
-        $entity = new Category();
+        $entity = new Comment();
         $now = new DateTime("now");
         $tomorrow = new DateTime("tomorrow");
 
-        $entity->setName('name');
-        $entity->setSlug('slug');
-        $entity->setColor('color');
+        $entity->setContent('content');
         $entity->setCreatedAt($now);
-        $entity->setUpdatedAt($now);     
-        
-        
-        $this->assertFalse($entity->getName() === 'wrongName');
-        $this->assertFalse($entity->getSlug() === 'wrongSlug');
-        $this->assertFalse($entity->getColor() === 'wrongcolor');
+        $entity->setUpdatedAt($now);
+
+
+        $this->assertFalse($entity->getContent() === 'wrongContent');
         $this->assertFalse($entity->getCreatedAt() === $tomorrow);
         $this->assertFalse($entity->getUpdatedAt() === $tomorrow);
     }
@@ -64,20 +74,16 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testIsEmpty() : void
+    public function testIsEmpty(): void
     {
-        $entity = new Category();
+        $entity = new Comment();
         $now = new DateTime("now");
 
-        $entity->setName('name');
-        $entity->setSlug('slug');
-        $entity->setColor('color');
+        $entity->setContent('content');
         $entity->setCreatedAt($now);
-        $entity->setUpdatedAt($now);   
+        $entity->setUpdatedAt($now);
 
-        $this->assertEmpty($entity->getName() === '');
-        $this->assertEmpty($entity->getSlug() === '');
-        $this->assertEmpty($entity->getColor() === '');
+        $this->assertEmpty($entity->getContent() === '');
         $this->assertEmpty($entity->getCreatedAt() === '');
         $this->assertEmpty($entity->getUpdatedAt() === '');
     }
@@ -90,12 +96,13 @@ class CategoryTest extends TestCase
      */
     public function testIsString(): void
     {
-        $entity = new Category();
-        $entity->setName('name');
-        $entity->setSlug('slug');
-        $entity->setColor('color');
+        $entity = new Comment();
+        $now = new DateTime("now");
+        $entity->setContent('content');
+        $entity->setCreatedAt($now);
+        $entity->setUpdatedAt($now);
 
-        $this->assertContainsOnly('string', [$entity->getName(), $entity->getColor(),$entity->getSlug()]);
+        $this->assertContainsOnly('string', [$entity->getContent()]);
     }
 
 
@@ -107,7 +114,7 @@ class CategoryTest extends TestCase
     public function testIsDateTime(): void
     {
         $now = new DateTime("now");
-        $entity = new Category();
+        $entity = new Comment();
         $entity->setCreatedAt($now);
         $entity->setUpdatedAt($now);
 
