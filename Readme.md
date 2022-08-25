@@ -1,6 +1,6 @@
 # Mint Blog Back End
 
-[![CI](https://github.com/DumeGrisoni/MintDev-BackEnd/actions/workflows/main.yaml/badge.svg?branch=main&event=status)](https://github.com/DumeGrisoni/MintDev-BackEnd/actions/workflows/main.yaml)
+[![CI](https://github.com/DumeGrisoni/MintDev-BackEnd/actions/workflows/main.yaml/badge.svg?branch=main)](https://github.com/DumeGrisoni/MintDev-BackEnd/actions/workflows/main.yaml)
 
 ## Déployement de la base de données
 
