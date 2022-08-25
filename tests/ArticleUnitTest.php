@@ -112,7 +112,7 @@ class ArticleUnitTest extends TestCase
     }
 
     /**
-     * Test de l'entité Article, doit retourné une datetime
+     * Test de l'entité Article, doit retourné un datetime
      *
      * @return void
      */

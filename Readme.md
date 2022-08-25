@@ -26,4 +26,5 @@ Pour mettre en place la partie Backend de mon application j'ai d'abord sélécti
 S'en est suivi les étapes de réalisation de la base de données et la création des routes d'API qui allaient être consommées par l'application Next.js :
 1. Création de la base de donnée et ses tables grâce à Symfony 6 et le MakerBundle.
 2. Choix des Entités et des routes exposés (GET,POST...) grâce à ApiPlatform.
+3. Mise en place de test unitaires pour les entités et d'une pipeline d'integration continue grâce a Github Actions.
   
