@@ -11,7 +11,7 @@ Afin de concrétiser ce projet j'ai découper mon travail en plusieurs parties (
  1. Création des Personas.
  2. Listage les besoins dans des Users Stories.
  3. Création d'un modèle de parcours utilisateur.
- 4. Création d'une Lightmap du site.
+ 4. Création d'un plan du site.
  5. Réalisation d'un modèle physique de données sur LucidChart.
 
 ### Le Back de l'application 
