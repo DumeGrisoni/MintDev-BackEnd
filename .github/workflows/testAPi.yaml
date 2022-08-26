@@ -31,9 +31,7 @@ on:
         # Create directory to upload test results
 # Run postman collection
       - name: Run Postman Collection        
-        run: |
- 
-        newman run https://api.getpostman.com/collections/16818717-1b775af7-a7c1-404a-a1ac-099ebcd8b328?apikey=PMAK-63088710835bc069cd6c69cc-9831295e6177f76968e83d5850b235d3a9
+        run: |newman run https://api.getpostman.com/collections/16818717-1b775af7-a7c1-404a-a1ac-099ebcd8b328?apikey=PMAK-63088710835bc069cd6c69cc-9831295e6177f76968e83d5850b235d3a9
 -e https://api.getpostman.com/environments/d2814a46-bfe3-42c1-8583-6c4178a1b2f5?apikey=PMAK-63088710835bc069cd6c69cc-9831295e6177f76968e83d5850b235d3a9
 # Upload the reports to TestArtifacts directory
       - name: Output the results
