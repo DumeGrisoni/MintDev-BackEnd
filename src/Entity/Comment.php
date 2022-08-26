@@ -22,7 +22,7 @@ class Comment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, unique:true)]
     private ?string $content = null;
 
     public function getId(): ?int
