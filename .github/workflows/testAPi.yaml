@@ -1,39 +1,43 @@
-name: Test-Build
+# Name of the GitHub Actions
+name: Continuous Test
+ 
+# Set the actions that triggers the workflow
 on:
+# Trigger the workflow on the push event, only in dev branch
   push:
-    branches:
-      - main
-jobs:
-  test-api:
+    branches: [ dev ]
+  jobs:
+  build:
     runs-on: ubuntu-latest
-    steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-      
-    # INstall Node on the runner
-    - name: Install Node
-      uses: actions/setup-node@v1
-      with: 
-        node-version: '12.x'
-    
-    # Install the newman command line utility and also install the html extra reporter
-    - name: Install newman
-      run: |
-       npm install -g newman
-       npm install -g newman-reporter-htmlextra
-
-    # Make directory to upload the test results
-    - name: Make Directory for results
-      run: mkdir -p testResults
-
-
-    # Run the POSTMAN collection
-    - name: Run POSTMAN collection
-      run: |
-       newman run ./tests/Func/Postman/postman_collection.json -e ./tests/Func/Postman/postman_environment.json 
-    # Upload the contents of Test Results directory to workspace
-    - name: Output the run Details
-      uses: actions/upload-artifact@v2
-      with: 
-       name: RunReports
-       path: testResults
+  strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  steps:
+      # Check out the repo, so the job can access it.  
+      - uses: actions/checkout@v2
+        # Install Node on the runner
+      - name: Use Node.js ${{ matrix.node-version }}      
+        uses: actions/setup-node@v1
+       
+      # Install newman globally, the reporter for slack and install the html extra reporter
+      - name: Install newman
+        run: |
+         npm install -g newman
+         npm install -g newman-reporter-htmlextra
+         # Create directory to upload test results
+      - name: Make Directory for Test Results
+        run: mkdir -p testArtifacts
+        # Create directory to upload test results
+# Run postman collection
+      - name: Run Postman Collection        
+        run: |
+ 
+        newman run https://api.getpostman.com/collections/16818717-1b775af7-a7c1-404a-a1ac-099ebcd8b328?apikey=PMAK-63088710835bc069cd6c69cc-9831295e6177f76968e83d5850b235d3a9
+-e https://api.getpostman.com/environments/d2814a46-bfe3-42c1-8583-6c4178a1b2f5?apikey=PMAK-63088710835bc069cd6c69cc-9831295e6177f76968e83d5850b235d3a9
+# Upload the reports to TestArtifacts directory
+      - name: Output the results
+        uses: actions/upload-artifact@v2
+        with:
+         name: Reports
+         path: testArtifacts
