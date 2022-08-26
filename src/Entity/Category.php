@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource]
@@ -20,15 +21,18 @@ class Category
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $color = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Slug(fields: ['name'])]
     private ?string $slug = null;
 
     public function getId(): ?int

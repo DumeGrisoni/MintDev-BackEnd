@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiResource]
@@ -23,9 +24,11 @@ class Article
     private ?string $excerpt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -35,6 +38,7 @@ class Article
     private ?string $image = null;
 
     #[ORM\Column(length: 128)]
+    #[Gedmo\Slug(fields:['title'])]
     private ?string $slug = null;
 
     public function getId(): ?int

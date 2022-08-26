@@ -6,6 +6,7 @@ use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource]
@@ -17,9 +18,11 @@ class Comment
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT, unique:true)]
