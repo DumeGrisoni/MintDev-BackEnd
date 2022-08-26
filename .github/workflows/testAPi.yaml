@@ -5,7 +5,7 @@ name: Continuous Test
 on:
 # Trigger the workflow on the push event, only in dev branch
   push:
-    branches: [ dev ]
+    branches: [ main ]
   jobs:
   build:
     runs-on: ubuntu-latest
