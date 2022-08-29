@@ -11,9 +11,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ['get']
+)]
 class Category
 {
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

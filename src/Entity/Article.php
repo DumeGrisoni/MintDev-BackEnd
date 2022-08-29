@@ -9,11 +9,23 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:["get"],
+    itemOperations:['get']
+)]
+#[Vich\Uploadable] 
 class Article
 {
+
+    public function __toString()
+    {
+        return $this->title;
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -35,6 +47,9 @@ class Article
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
+
+    #[Vich\UploadableField(mapping: 'blog_images', fileNameProperty: 'image')]
+    private ?File $imageFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
@@ -124,6 +139,20 @@ class Article
         $this->content = $content;
 
         return $this;
+    }
+
+    public function setImageFile(?File $imageFile = null)
+    {
+        $this->imageFile = $imageFile;
+        if (null != $this->imageFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
     }
 
     public function getImage(): ?string

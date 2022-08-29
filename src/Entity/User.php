@@ -7,14 +7,57 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte associé à cet adresse Email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->roles= ["ROLE_ATTENTE"];
+    }
+    public function serialize()
+    {
+        return serialize(array(
+            $this->getImageFile(),
+            $this->getId(),
+            $this->getPassword(),
+            $this->getEmail()
+
+        ));
+    }
+
+    public function unserialize( $serialized)
+    {
+        list(
+            $this->imageFile,
+            $this->id,
+            $this->password,
+            $this->email
+        )= unserialize($serialized);
+    }
+
+    public function __toString()
+    {
+        return 
+        $this->name;
+    }
+
+    const ROLE = [
+        'ATTENTE' => 'ROLE_ATTENTE',
+        'BLOGEUR' => 'ROLE_BLOGEUR'
+    ];
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -44,6 +87,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthday = null;
 
+    #[Vich\UploadableField(mapping: 'blog_images', fileNameProperty: 'photo')]
+    private ?File $imageFile = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
@@ -53,20 +99,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user_comment', targetEntity: Comment::class)]
     private Collection $comments;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
-    public function __construct()
-    {
-        $this->articles = new ArrayCollection();
-        $this->comments = new ArrayCollection();
-        $this->roles= ["ROLE_USER"];
-    }
 
-    public function getId(): ?int
+
+    public function getId(): int
     {
         return $this->id;
     }
-
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -94,8 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_ATTENTE';
 
         return array_unique($roles);
     }
@@ -131,7 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -143,7 +184,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSurname(): ?string
+    public function getSurname(): string
     {
         return $this->surname;
     }
@@ -160,7 +201,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->pseudo;
     }
 
-    public function setPseudo(?string $pseudo): self
+    public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
 
@@ -177,6 +218,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->birthday = $birthday;
 
         return $this;
+    }
+
+     public function setImageFile(?File $imageFile = null)
+    {
+        $this->imageFile = $imageFile;
+        if (null != $this->imageFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
     }
 
     public function getPhoto(): ?string
@@ -247,6 +302,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $comment->setUserComment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

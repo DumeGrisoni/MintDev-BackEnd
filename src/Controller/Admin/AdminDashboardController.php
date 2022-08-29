@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Comment;
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,6 +52,9 @@ class AdminDashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Voir une catégorie', 'fas fa-eye', Category::class)
         ]);
         yield MenuItem::section('Commentaires');
-        yield MenuItem::linkToCrud('Voir un commentaire', 'fas fa-eye', Comment::class);
+        yield MenuItem::linkToCrud('Voir un commentaire', 'fa-solid fa-comment', Comment::class);
+
+        yield MenuItem::section('Blogeurs');
+        yield MenuItem::linkToCrud('Liste des Blogeurs', 'fa-solid fa-people-group', User::class);
     }
 }

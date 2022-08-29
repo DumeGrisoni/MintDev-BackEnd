@@ -9,7 +9,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ['get']
+)]
 class Comment
 {
     #[ORM\Id]
