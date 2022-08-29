@@ -58,8 +58,6 @@ class Article
     #[Gedmo\Slug(fields:['title'])]
     private ?string $slug = null;
 
-    #[ORM\ManyToOne(inversedBy: 'articles')]
-    private ?Category $categories = null;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class)]
     private Collection $comments;
@@ -70,10 +68,14 @@ class Article
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?User $author = null;
 
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'articles')]
+    private Collection $categories;
+
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,17 +181,6 @@ class Article
         return $this;
     }
 
-    public function getCategories(): ?Category
-    {
-        return $this->categories;
-    }
-
-    public function setCategories(?Category $categories): self
-    {
-        $this->categories = $categories;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Comment>
@@ -241,6 +232,30 @@ class Article
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }
